@@ -1,16 +1,8 @@
-
-
 var fs = require('fs'),
   path = require('path'),
   crypto = require('crypto');
 
-
 module.exports = function(grunt) {
-  // rev task - reving is done in the `output/` directory
-  grunt.registerMultiTask('rev', 'Automate the hash renames of assets filename', function() {
-    grunt.helper('hash', this.data);
-  });
-
   // **hash** helper takes care of files revving, by renaming any files
   // in the given `files` pattern(s), with passed in `options`.
   //
@@ -19,33 +11,35 @@ module.exports = function(grunt) {
   //    - cwd     - Base directory to work from, glob patterns are
   //                prepended to this path.
   //
-  grunt.registerHelper('hash', function(files, opts) {
-    opts = opts || {};
+  function hash(f) {
+    var hash = md5(f),
+      renamed = [hash.slice(0, 8), path.basename(f)].join('.');
 
-    grunt.file.expandFiles(files).forEach(function(f) {
-      var md5 = grunt.helper('md5', f),
-        renamed = [md5.slice(0, 8), path.basename(f)].join('.');
-
-      grunt.verbose.ok().ok(md5);
-      // create the new file
-      fs.renameSync(f, path.resolve(path.dirname(f), renamed));
-      grunt.log.write(f + ' ').ok(renamed);
-    });
-  });
-
+    grunt.verbose.ok().ok(hash);
+    // create the new file
+    fs.renameSync(f, path.resolve(path.dirname(f), renamed));
+    grunt.log.write(f + ' ').ok(renamed);
+  };
 
   // **md5** helper is a basic wrapper around crypto.createHash, with
   // given `algorithm` and `encoding`. Both are optional and defaults to
   // `md5` and `hex` values.
-  grunt.registerHelper('md5', function(filepath, algorithm, encoding) {
+  function md5(filepath, algorithm, encoding) {
     algorithm = algorithm || 'md5';
     encoding = encoding || 'hex';
     var hash = crypto.createHash(algorithm);
     hash.update(grunt.file.read(filepath));
     grunt.log.verbose.write('Hashing ' + filepath + '...');
     return hash.digest(encoding);
+  };
+
+  // rev task - reving is done in the `output/` directory
+  grunt.registerMultiTask('rev', 'Automate the hash renames of assets filename', function() {
+    this.files.forEach(function(filePair) {
+      filePair.src.forEach(function(src) {
+        grunt.log.writeln(src);
+        hash(src);
+      });
+    });
   });
 };
-
-
-
