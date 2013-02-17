@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     grunt.log.verbose.write('Hashing ' + filepath + '...');
     hash.update(grunt.file.read(filepath));
     return hash.digest(encoding);
-  };
+  }
 
   grunt.registerMultiTask('rev', 'Prefix static asset file names with a content hash', function() {
 
