@@ -1,4 +1,4 @@
-# grunt-rev
+# grunt-rev [![Build Status](https://travis-ci.org/cbas/grunt-rev.png)](https://travis-ci.org/cbas/grunt-rev)
 
 > Static file asset revisioning through content hashing
 
