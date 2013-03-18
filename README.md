@@ -34,6 +34,7 @@ In your project's Gruntfile, add a section named `rev` to the data object passed
 grunt.initConfig({
   rev: {
     options: {
+      encoding: 'utf8',
       algorithm: 'md5',
       length: 8
     },
@@ -50,6 +51,12 @@ grunt.initConfig({
 ```
 
 ### Options
+
+#### options.encoding
+Type: `String`
+Default value: `'utf8'`
+
+The encoding of the file contents.
 
 #### options.algorithm
 Type: `String`
