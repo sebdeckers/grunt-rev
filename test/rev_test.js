@@ -43,4 +43,12 @@ exports.rev = {
 
     test.done();
   },
+  international_options: function(test) {
+    test.expect(1);
+
+    var exists = grunt.file.exists('tmp/faa07745.international.txt');
+    test.ok(exists, '8 character MD5 hash prefix for international content');
+
+    test.done();
+  }
 };
