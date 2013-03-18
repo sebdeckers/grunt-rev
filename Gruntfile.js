@@ -50,6 +50,12 @@ module.exports = function(grunt) {
         },
         src: ['tmp/custom.txt']
       },
+      international_options: {
+        options: {
+          encoding: 'utf8'
+        },
+        src: ['tmp/international.txt']
+      },
     },
 
     // Unit tests.
