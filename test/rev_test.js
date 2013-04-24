@@ -50,5 +50,14 @@ exports.rev = {
     test.ok(exists, '8 character MD5 hash prefix for international content');
 
     test.done();
+  },
+  different_output_dir: function(test) {
+    test.expect(3);
+
+    test.ok( grunt.file.exists('tmp/override.txt'), 'Source file still exists when using a different output dir');
+    test.ok( !grunt.file.exists('tmp/c409.override.txt'), 'Correctly absent in default location');
+    test.ok( grunt.file.exists('tmp/override/c409.override.txt'), 'Correctly present in overridden location');
+
+    test.done();
   }
 };

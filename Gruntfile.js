@@ -56,6 +56,11 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      override_output_location: {
+        options: { encoding: 'utf8', algorithm: 'sha1', length: 4 },
+        src: ['tmp/override.txt'],
+        dest:"tmp/override/"
+      },
     },
 
     // Unit tests.

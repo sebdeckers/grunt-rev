@@ -85,6 +85,21 @@ grunt.initConfig({
 })
 ```
 
+#### Specifying an output directory
+This allows you to specify where you'd like the renamed file to be copied.
+
+```js
+grunt.initConfig({
+  rev: {
+    files: {
+      src: ['scripts/*.js']
+    },
+    dest: 'build/output/'
+  }
+})
+```
+Note that when overriding the output directory the original file is left intact.
+
 #### Custom Options
 Change the algorithm or length to style the generated asset file names. Note that the `usemin` companion task requires at least one anycase hexadecimal character to prefix the file name.
 
