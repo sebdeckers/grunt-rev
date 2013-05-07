@@ -28,6 +28,7 @@ module.exports = function(grunt) {
       algorithm: 'md5',
       length: 8
     });
+    var summary = {};
 
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(f) {
@@ -36,7 +37,7 @@ module.exports = function(grunt) {
           prefix = hash.slice(0, options.length),
           renamed = [prefix, path.basename(f)].join('.'),
           outPath = path.resolve(path.dirname(f), renamed);
-
+        summary[f] = path.join(path.dirname(f), renamed);
         grunt.verbose.ok().ok(hash);
         fs.renameSync(f, outPath);
         grunt.log.write(f + ' ').ok(renamed);
@@ -44,6 +45,9 @@ module.exports = function(grunt) {
       });
     });
 
+    if (options.summary) {
+      grunt.file.write(options.summary, JSON.stringify(summary));
+    }
   });
 
 };
