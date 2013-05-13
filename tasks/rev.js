@@ -33,8 +33,9 @@ module.exports = function(grunt) {
       filePair.src.forEach(function(f) {
 
         var hash = md5(f, options.algorithm, 'hex', options.encoding),
-          prefix = hash.slice(0, options.length),
-          renamed = [prefix, path.basename(f)].join('.'),
+          suffix = hash.slice(0, options.length),
+          ext = path.extname(f),
+          renamed = [path.basename(f, ext), suffix, ext.slice(1)].join('.'),
           outPath = path.resolve(path.dirname(f), renamed);
 
         grunt.verbose.ok().ok(hash);

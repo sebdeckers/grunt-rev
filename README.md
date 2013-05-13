@@ -68,12 +68,12 @@ Default value: `'md5'`
 Type: `Number`
 Default value: `8`
 
-The number of characters of the file content hash to prefix the file name with.
+The number of characters of the file content hash to suffix the file name with.
 
 ### Usage Examples
 
 #### Basic Asset Revving
-This will rename `app.js` and `app.css` with an 8 character long hash prefix. For example `js/9becff3a.app.js` and `css/ae35dd05.app.css`. The hash value depends on the file contents.
+This will rename `app.js` and `app.css` with an 8 character long hash suffix. For example `js/app.9becff3a.js` and `css/app.ae35dd05.css`. The hash value depends on the file contents.
 
 ```js
 grunt.initConfig({
@@ -86,7 +86,7 @@ grunt.initConfig({
 ```
 
 #### Custom Options
-Change the algorithm or length to style the generated asset file names. Note that the `usemin` companion task requires at least one anycase hexadecimal character to prefix the file name.
+Change the algorithm or length to style the generated asset file names. Note that the `usemin` companion task requires at least one anycase hexadecimal character to suffix the file name.
 
 ```js
 grunt.initConfig({
