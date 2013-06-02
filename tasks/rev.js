@@ -13,6 +13,7 @@ var fs = require('fs'),
   crypto = require('crypto');
 
 module.exports = function(grunt) {
+  var _ = grunt.util._;
 
   function md5(filepath, algorithm, encoding, fileEncoding) {
     var hash = crypto.createHash(algorithm);
@@ -27,7 +28,8 @@ module.exports = function(grunt) {
       encoding: 'utf8',
       algorithm: 'md5',
       length: 8
-    });
+    }),
+    mapping = {};
 
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(f) {
@@ -35,13 +37,18 @@ module.exports = function(grunt) {
         var hash = md5(f, options.algorithm, 'hex', options.encoding),
           prefix = hash.slice(0, options.length),
           renamed = [prefix, path.basename(f)].join('.'),
-          outPath = path.resolve(path.dirname(f), renamed);
+          outPath = path.join(path.dirname(f), renamed);
 
+        mapping[f] = outPath;
         grunt.verbose.ok().ok(hash);
         fs.renameSync(f, outPath);
         grunt.log.write(f + ' ').ok(renamed);
 
       });
+
+      if (_.isFunction(options.after)) {
+        options.after(mapping, options);
+      }
     });
 
   });

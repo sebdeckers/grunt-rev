@@ -56,6 +56,14 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      mapping: {
+        options: {
+          after: function (mapping, options) {
+            grunt.file.write('tmp/mapping.json', JSON.stringify(mapping));
+          }
+        },
+        src: ['tmp/mapping.txt', 'tmp/international.txt']
+      },
     },
 
     // Unit tests.

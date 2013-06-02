@@ -50,5 +50,13 @@ exports.rev = {
     test.ok(exists, '8 character MD5 hash prefix for international content');
 
     test.done();
+  },
+  mapping: function(test) {
+    test.expect(1);
+
+    var raw = grunt.file.read('tmp/mapping.json');
+    test.equal(raw, '{"tmp/mapping.txt":"tmp/d41d8cd9.mapping.txt"}');
+
+    test.done();
   }
 };
