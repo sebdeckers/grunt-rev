@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       test: {
         flatten: true,
         expand: true,
-        src: ['test/fixtures/*.txt'],
+        src: ['test/fixtures/*.{txt,png}'],
         dest: 'tmp/',
       },
     },
@@ -56,6 +56,26 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      alt_options: {
+        options: {
+          alt: {
+            pattern: 'tmp/*@?x.{jpg,gif,png,webp}',
+            identifier: '@?x'
+          }
+        },
+        src: ['tmp/Open*.png']
+      },
+      alt_options_array: {
+        options: {
+          alt: [
+            {
+              pattern: 'tmp/*@?x.{jpg,gif,png,webp}',
+              identifier: '@?x'
+            }
+          ]
+        },
+        src: ['tmp/Array*.png']
+      }
     },
 
     // Unit tests.

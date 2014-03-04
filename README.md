@@ -2,6 +2,41 @@
 
 > Static file asset revisioning through content hashing
 
+## About this fork
+
+Added functionality to use the same hash for alternate versions of an image, so that you will be able to use frameworks like RetinaJS to
+support hi-res images for retina displays.
+
+We considered forking RetinaJS instead, however we didn't find a good solution for handling images included in CSS.
+
+Here is an example usage for the alt-feature:
+
+    ...
+    rev: {
+      options: {
+        alt: {
+          pattern: 'tmp/*@2x.{jpg,gif,png,webp}',
+          identifier: '@2x'
+        }
+      },
+      src: ['tmp/*.png']
+    },
+    ...
+
+This produces a `rev`ed file any files identified by '@2x' will get the same hash prefix. For example:
+
+    Open-Source-Logo.png
+    Open-Source-Logo@2x.png
+
+... becomes:
+
+    3d0793d5.Open-Source-Logo.png
+    3d0793d5.Open-Source-Logo@2x.png
+
+... despite they are different images with different hashes.
+
+You can specifiy `alt` as an object or an array of objects.
+
 ## Getting Started
 _If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._
 

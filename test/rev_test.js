@@ -50,5 +50,25 @@ exports.rev = {
     test.ok(exists, '8 character MD5 hash prefix for international content');
 
     test.done();
+  },
+  alt_options: function(test) {
+    test.expect(2);
+
+    var existsOriginal = grunt.file.exists('tmp/3d0793d5.Open-Source-Logo.png');
+    test.ok(existsOriginal, '8 character MD5 hash prefix for original image');
+    var existsAlt = grunt.file.exists('tmp/3d0793d5.Open-Source-Logo@2x.png');
+    test.ok(existsOriginal, '8 character MD5 hash prefix for alt image');
+
+    test.done();
+  },
+  alt_options_array: function(test) {
+    test.expect(2);
+
+    var existsOriginal = grunt.file.exists('tmp/3d0793d5.Array-Source-Logo2.png');
+    test.ok(existsOriginal, '8 character MD5 hash prefix for original image');
+    var existsAlt = grunt.file.exists('tmp/3d0793d5.Array-Source-Logo2@2x.png');
+    test.ok(existsOriginal, '8 character MD5 hash prefix for alt image');
+
+    test.done();
   }
 };

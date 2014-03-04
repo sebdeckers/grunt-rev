@@ -37,5 +37,9 @@
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "dependencies": {
+    "glob-to-regexp": "0.0.1",
+    "underscore.string": "~2.3.3"
+  }
 }
