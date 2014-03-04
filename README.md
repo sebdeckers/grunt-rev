@@ -1,4 +1,4 @@
-# grunt-rev [![Build Status](https://travis-ci.org/cbas/grunt-rev.png)](https://travis-ci.org/cbas/grunt-rev)
+# grunt-rev [![Build Status](https://travis-ci.org/TinyCarrier/grunt-rev.png)](https://travis-ci.org/cbas/grunt-rev)
 
 > Static file asset revisioning through content hashing
 
@@ -35,7 +35,7 @@ This produces a `rev`ed file any files identified by '@2x' will get the same has
 
 ... despite they are different images with different hashes.
 
-You can specifiy `alt` as an object or an array of objects.
+You can specify `alt` as an object or an array of objects.
 
 ## Getting Started
 _If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._
