@@ -10,109 +10,141 @@
 
 var fs = require('fs'),
   path = require('path'),
-  crypto = require('crypto'),
-  globex = require('glob-to-regexp'),
-  _s = require('underscore.string');
+  crypto = require('crypto');
 
 module.exports = function(grunt) {
 
   function md5(filepath, algorithm, encoding, fileEncoding) {
-    var hash = crypto.createHash(algorithm);
-    grunt.log.verbose.write('Hashing ' + filepath + '...');
-    hash.update(grunt.file.read(filepath), fileEncoding);
+    var hash = crypto.createHash(algorithm), i;
+    if (grunt.util.kindOf(filepath) === 'array') {
+      grunt.log.verbose.write('Hashing group "' + filepath.join('", "') + '" ...');
+      for (i = 0; i < filepath.length; i += 1) {
+        hash.update(grunt.file.read(filepath[i]), fileEncoding);
+      }
+    } else {
+      grunt.log.verbose.write('Hashing ' + filepath + '...');
+      hash.update(grunt.file.read(filepath), fileEncoding);
+    }
     return hash.digest(encoding);
   }
 
-  function findAndBuildMatch(altObj, patternMatch, prefixMap) {
-    var baseRegexp = globex(altObj.pattern, { extended: true }),
-      identifierRegexp = globex(altObj.identifier, { extended: true }),
-      identifierRegexpSource = _s.trim(identifierRegexp.source, '/^$'),
-      identifierMatchingRegexp = new RegExp(baseRegexp.source.replace(identifierRegexpSource, '(' + identifierRegexpSource + ')')),
-      identifierExcludingRegexp = new RegExp('^(' + _s.trim(baseRegexp.source, '^$').replace(identifierRegexpSource, ')' + identifierRegexpSource + '(') + ')$'),
-      matchingResult, excludingResult;
-
-    matchingResult = identifierMatchingRegexp.exec(patternMatch);
-    excludingResult = identifierExcludingRegexp.exec(patternMatch);
-    if (matchingResult === null || excludingResult === null) {
-      return null;
+  function findMatchingFiles(matchData, matchDataAll) {
+    var baseFilename = matchData[1] + matchData[3],
+      machingFiles = [baseFilename], i;
+    for (i = 0; i < matchDataAll.length; i += 1) {
+      if (matchData[1] === matchDataAll[i][1] && matchData[3] === matchDataAll[i][3]) {
+        machingFiles.push(matchDataAll[i][0]);
+      }
     }
 
-    var originalName = excludingResult[1] + excludingResult[2],
-      prefix = prefixMap[originalName],
-      prefixedName, lastDirIndex;
+    return machingFiles;
+  }
 
-    if (prefix) {
-      lastDirIndex = excludingResult[1].lastIndexOf('/') + 1;
-      prefixedName = excludingResult[1].substr(0, lastDirIndex) +
-        prefix +
-        '.' +
-        excludingResult[1].substr(lastDirIndex) +
-        matchingResult[1] +
-        excludingResult[2];
+  function combineGroups(pattern, matchData) {
+    var groups = [],
+      iFiles, filesLength = matchData.matching.length,
+      matchingFiles,
+      matchedNames = [];
 
-      return { alt: patternMatch, prefixed: prefixedName, original: originalName, prefix: prefix };
+    for (iFiles = 0; iFiles < filesLength; iFiles += 1) {
+      if (matchedNames.indexOf(matchData.matching[iFiles][0]) >= 0) {
+        continue;
+      }
+      matchingFiles = findMatchingFiles(matchData.matching[iFiles], matchData.matching);
+      matchedNames = matchedNames.concat(matchingFiles);
+      groups.push(matchingFiles);
     }
-    return null;
+
+    return groups;
   }
 
   grunt.registerMultiTask('rev', 'Prefix static asset file names with a content hash', function() {
 
     var options = this.options({
+      alternates: true,
+      alternatesPattern: /[@_]\dx/,
       encoding: 'utf8',
       algorithm: 'md5',
       length: 8
     });
 
-    var alt = [],
-      patternMatches = [],
-      patternMatchesMap = [];
-
-    // Wrap alt object in array
-    if (grunt.util.kindOf(options.alt) === 'object') {
-      alt = [options.alt];
-    } else if (grunt.util.kindOf(options.alt) === 'array') {
-      alt = options.alt;
+    var alternatesPatterns = [];
+    if (grunt.util.kindOf(options.alternatesPattern) === 'array') {
+      alternatesPatterns = options.alternatesPattern;
+    } else if (grunt.util.kindOf(options.alternatesPattern) === 'regexp') {
+      alternatesPatterns = [options.alternatesPattern];
     }
 
-    // Find files matching pattern
-    var tmpMatches;
-    alt.forEach(function (altObj) {
-      tmpMatches = grunt.file.glob.sync(altObj.pattern);
-      grunt.util.kindOf(tmpMatches);
-      patternMatches = patternMatches.concat(tmpMatches);
-      patternMatchesMap.push({
-        altObj: altObj,
-        matches: tmpMatches
-      });
-    });
+    var i, match, regexp, patternsLength,
+      regexps = [],
+      matchingFiles = {};
 
-    var prefixMap = {};
+    // Set patternsLength to 0 in case alternates is disabled
+    patternsLength = options.alternates === true ? alternatesPatterns.length : 0;
+
+    // Prepare regexps
+    for (i = 0; i < patternsLength; i += 1) {
+      if (grunt.util.kindOf(alternatesPatterns[i]) !== 'regexp') {
+        // TODO throw error
+      }
+      regexp = new RegExp('^(.*)(' + alternatesPatterns[i].source + ')(\\.(?:jpg|png|gif|webp))$');
+      regexps.push(regexp);
+      matchingFiles[alternatesPatterns[i].source] = { regexp: regexp, matching: [] };
+    }
+
+    // Find matching files
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(f) {
-        if (patternMatches.indexOf(f) < 0) {
-          var hash = md5(f, options.algorithm, 'hex', options.encoding),
-            prefix = hash.slice(0, options.length),
-            renamed = [prefix, path.basename(f)].join('.'),
-            outPath = path.resolve(path.dirname(f), renamed);
-
-          prefixMap[f] = prefix;
-          grunt.verbose.ok().ok(hash);
-          fs.renameSync(f, outPath);
-          grunt.log.write(f + ' ').ok(renamed);
-        } else {
-          grunt.log.write(f + ' skipping alt version ').ok();
+        for (i = 0; i < patternsLength; i += 1) {
+          match = regexps[i].exec(f);
+          if (match !== null) {
+            matchingFiles[alternatesPatterns[i].source].matching.push(match);
+            // Limitation: a file can only match one pattern
+            break;
+          }
         }
       });
     });
 
-    // Rename alt files based on prefixMap
-    var fileMatch;
-    patternMatchesMap.forEach(function (altMap) {
-      altMap.matches.forEach(function (patternMatch) {
-        fileMatch = findAndBuildMatch(altMap.altObj, patternMatch, prefixMap);
-        if (fileMatch !== null) {
-          fs.renameSync(fileMatch.alt, fileMatch.prefixed);
-          grunt.log.write(fileMatch.alt + ' ').ok(fileMatch.prefixed);
+    // Combine into groups
+    var combinedGroups, pattern, groups = [];
+    for (pattern in matchingFiles) {
+      if (matchingFiles.hasOwnProperty(pattern)) {
+        combinedGroups = combineGroups(pattern, matchingFiles[pattern]);
+        groups = groups.concat(combinedGroups);
+      }
+    }
+
+    // Handle groups
+    var group, j, k, hash, prefix, renamed, outPath, f, handledFiles = [];
+    for (k = 0; k < groups.length; k += 1) {
+      group = groups[k];
+      hash = md5(group, options.algorithm, 'hex', options.encoding);
+      prefix = hash.slice(0, options.length);
+      grunt.verbose.ok(hash);
+      for (j = 0; j < group.length; j += 1) {
+        f = group[j];
+        renamed = [prefix, path.basename(f)].join('.');
+        outPath = path.resolve(path.dirname(f), renamed);
+
+        fs.renameSync(f, outPath);
+        grunt.log.write(f + ' ').ok(renamed);
+        handledFiles.push(f);
+      }
+    }
+
+    // Handle the rest of the files
+    this.files.forEach(function(filePair) {
+      filePair.src.forEach(function(f) {
+        if (handledFiles.indexOf(f) < 0) {
+          hash = md5(f, options.algorithm, 'hex', options.encoding);
+          prefix = hash.slice(0, options.length);
+          renamed = [prefix, path.basename(f)].join('.');
+          outPath = path.resolve(path.dirname(f), renamed);
+
+          grunt.verbose.ok().ok(hash);
+          fs.renameSync(f, outPath);
+          grunt.log.write(f + ' ').ok(renamed);
         }
       });
     });

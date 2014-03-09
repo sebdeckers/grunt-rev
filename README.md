@@ -4,8 +4,8 @@
 
 ## About this fork
 
-Added functionality to use the same hash for alternate versions of an image, so that you will be able to use frameworks like RetinaJS to
-support hi-res images for retina displays.
+Added functionality to use the same hash for alternate versions of an image, so that you will be able to use
+frameworks like RetinaJS to support hi-res images for retina displays.
 
 We considered forking RetinaJS instead, however we didn't find a good solution for handling images included in CSS.
 
@@ -14,28 +14,29 @@ Here is an example usage for the alt-feature:
     ...
     rev: {
       options: {
-        alt: {
-          pattern: 'tmp/*@2x.{jpg,gif,png,webp}',
-          identifier: '@2x'
-        }
+        alternates: true,
+        alternatesPattern: /[@_]\dx/
       },
       src: ['tmp/*.png']
     },
     ...
 
-This produces a `rev`ed file any files identified by '@2x' will get the same hash prefix. For example:
+Any image files identified by the regex `[@_]\dx` include the file without this particular pattenr, will get the same hash prefix. For example:
 
-    Open-Source-Logo.png
-    Open-Source-Logo@2x.png
+    Open-Source-Logo.png <--- the 'original' image
+    Open-Source-Logo@2x.png <--- the alternate version
 
 ... becomes:
 
     3d0793d5.Open-Source-Logo.png
     3d0793d5.Open-Source-Logo@2x.png
 
-... despite they are different images with different hashes.
+... despite they are different images with different hashes. The hash is calculated from the content of all images.
 
-You can specify `alt` as an object or an array of objects.
+You can specify `alternatesPattern` as a `RegExp` object or an array of `RegExp`.
+
+This functionality and the values seen above are default for this fork. To turn of the functionality set `alternates`
+to the value `false`.
 
 ## Getting Started
 _If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._

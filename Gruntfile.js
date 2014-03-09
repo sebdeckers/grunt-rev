@@ -58,21 +58,13 @@ module.exports = function(grunt) {
       },
       alt_options: {
         options: {
-          alt: {
-            pattern: 'tmp/*@?x.{jpg,gif,png,webp}',
-            identifier: '@?x'
-          }
+            alternatesPattern: /[@_]\dx/
         },
         src: ['tmp/Open*.png']
       },
-      alt_options_array: {
+      alt_options_off: {
         options: {
-          alt: [
-            {
-              pattern: 'tmp/*@?x.{jpg,gif,png,webp}',
-              identifier: '@?x'
-            }
-          ]
+          alternates: false
         },
         src: ['tmp/Array*.png']
       }
