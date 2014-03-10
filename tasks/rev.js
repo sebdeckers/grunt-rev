@@ -61,7 +61,6 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('rev', 'Prefix static asset file names with a content hash', function() {
 
     var options = this.options({
-      alternates: true,
       alternatesPattern: /[@_]\dx/,
       encoding: 'utf8',
       algorithm: 'md5',
@@ -69,23 +68,23 @@ module.exports = function(grunt) {
     });
 
     var alternatesPatterns = [];
-    if (grunt.util.kindOf(options.alternatesPattern) === 'array') {
+    if (options.alternatesPattern === null) {
+      alternatesPatterns = [];
+    } else if (grunt.util.kindOf(options.alternatesPattern) === 'array') {
       alternatesPatterns = options.alternatesPattern;
-    } else if (grunt.util.kindOf(options.alternatesPattern) === 'regexp') {
+    } else {
       alternatesPatterns = [options.alternatesPattern];
     }
 
-    var i, match, regexp, patternsLength,
+    var i, match, regexp,
       regexps = [],
-      matchingFiles = {};
-
-    // Set patternsLength to 0 in case alternates is disabled
-    patternsLength = options.alternates === true ? alternatesPatterns.length : 0;
+      matchingFiles = {},
+      patternsLength = alternatesPatterns.length;
 
     // Prepare regexps
     for (i = 0; i < patternsLength; i += 1) {
       if (grunt.util.kindOf(alternatesPatterns[i]) !== 'regexp') {
-        // TODO throw error
+        grunt.fatal('alternates pattern must be a regular expression');
       }
       regexp = new RegExp('^(.*)(' + alternatesPatterns[i].source + ')(\\.(?:jpg|png|gif|webp))$');
       regexps.push(regexp);

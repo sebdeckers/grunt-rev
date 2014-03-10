@@ -53,12 +53,6 @@ exports.rev = {
   },
   alt_options: function(test) {
     test.expect(6);
-    // tmp/Open-Source-Divider.png >> de0ee580.Open-Source-Divider.png
-    // tmp/Open-Source-Divider@2x.png >> de0ee580.Open-Source-Divider@2x.png
-    // tmp/Open-Source-Logo.png >> ecea3614.Open-Source-Logo.png
-    // tmp/Open-Source-Logo@2x.png >> ecea3614.Open-Source-Logo@2x.png
-    // tmp/Open-Source-Logo@4x.png >> ecea3614.Open-Source-Logo@4x.png
-    // tmp/Open-Source-Logo-No-Alt.png >> 9aa33131.Open-Source-Logo-No-Alt.png
     
     var existsOriginal = grunt.file.exists('tmp/ecea3614.Open-Source-Logo.png');
     test.ok(existsOriginal, '8 character MD5 hash prefix for original image 1');
@@ -74,6 +68,16 @@ exports.rev = {
     
     var existsAltNo = grunt.file.exists('tmp/9aa33131.Open-Source-Logo-No-Alt.png');
     test.ok(existsAltNo, '8 character MD5 hash prefix for not alt image');
+
+    test.done();
+  },
+  alt_options_default: function(test) {
+    test.expect(2);
+
+    var existsOriginal = grunt.file.exists('tmp/45c45315.Default-Source-Logo.png');
+    test.ok(existsOriginal, '8 character MD5 hash prefix for original image');
+    var existsAlt = grunt.file.exists('tmp/45c45315.Default-Source-Logo_2x.png');
+    test.ok(existsAlt, '8 character MD5 hash prefix for alt image');
 
     test.done();
   },

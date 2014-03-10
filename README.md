@@ -14,14 +14,13 @@ Here is an example usage for the alt-feature:
     ...
     rev: {
       options: {
-        alternates: true,
         alternatesPattern: /[@_]\dx/
       },
       src: ['tmp/*.png']
     },
     ...
 
-Any image files identified by the regex `[@_]\dx` include the file without this particular pattenr, will get the same hash prefix. For example:
+Any image files identified by the regexp `[@_]\dx` include the file without this particular pattern, will get the same hash prefix. For example:
 
     Open-Source-Logo.png <--- the 'original' image
     Open-Source-Logo@2x.png <--- the alternate version
@@ -35,8 +34,8 @@ Any image files identified by the regex `[@_]\dx` include the file without this 
 
 You can specify `alternatesPattern` as a `RegExp` object or an array of `RegExp`.
 
-This functionality and the values seen above are default for this fork. To turn of the functionality set `alternates`
-to the value `false`.
+* `/[@_]\dx/` is the default regular expression for `alternatesPattern`
+* To turn off `alternatesPattern` set it to `null`
 
 ## Getting Started
 _If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._

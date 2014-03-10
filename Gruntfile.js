@@ -62,12 +62,21 @@ module.exports = function(grunt) {
         },
         src: ['tmp/Open*.png']
       },
+      alt_options_default: {
+        src: ['tmp/Default*.png']
+      },
       alt_options_off: {
         options: {
-          alternates: false
+          alternatesPattern: null
         },
         src: ['tmp/Array*.png']
-      }
+      },
+      // alt_options_error: {
+      //   options: {
+      //     alternatesPattern: '[@_]\\dx'
+      //   },
+      //   src: ['tmp/89e088f6*.png']
+      // }
     },
 
     // Unit tests.
