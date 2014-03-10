@@ -1,6 +1,41 @@
-# grunt-rev [![Build Status](https://travis-ci.org/cbas/grunt-rev.png)](https://travis-ci.org/cbas/grunt-rev)
+# grunt-rev [![Build Status](https://travis-ci.org/TinyCarrier/grunt-rev.png)](https://travis-ci.org/cbas/grunt-rev)
 
 > Static file asset revisioning through content hashing
+
+## About this fork
+
+Added functionality to use the same hash for alternate versions of an image, so that you will be able to use
+frameworks like RetinaJS to support hi-res images for retina displays.
+
+We considered forking RetinaJS instead, however we didn't find a good solution for handling images included in CSS.
+
+Here is an example usage for the alt-feature:
+
+    ...
+    rev: {
+      options: {
+        alternatesPattern: /[@_]\dx/
+      },
+      src: ['tmp/*.png']
+    },
+    ...
+
+Any image files identified by the regexp `[@_]\dx` include the file without this particular pattern, will get the same hash prefix. For example:
+
+    Open-Source-Logo.png <--- the 'original' image
+    Open-Source-Logo@2x.png <--- the alternate version
+
+... becomes:
+
+    3d0793d5.Open-Source-Logo.png
+    3d0793d5.Open-Source-Logo@2x.png
+
+... despite they are different images with different hashes. The hash is calculated from the content of all images.
+
+You can specify `alternatesPattern` as a `RegExp` object or an array of `RegExp`.
+
+* `/[@_]\dx/` is the default regular expression for `alternatesPattern`
+* To turn off `alternatesPattern` set it to `null`
 
 ## Getting Started
 _If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._

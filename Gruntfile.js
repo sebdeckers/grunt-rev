@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       test: {
         flatten: true,
         expand: true,
-        src: ['test/fixtures/*.txt'],
+        src: ['test/fixtures/*.{txt,png}'],
         dest: 'tmp/',
       },
     },
@@ -56,6 +56,27 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      alt_options: {
+        options: {
+            alternatesPattern: /[@_]\dx/
+        },
+        src: ['tmp/Open*.png']
+      },
+      alt_options_default: {
+        src: ['tmp/Default*.png']
+      },
+      alt_options_off: {
+        options: {
+          alternatesPattern: null
+        },
+        src: ['tmp/Off*.png']
+      },
+      alt_options_array: {
+        options: {
+          alternatesPattern: [ /-(hover|active)/, /[@_]\dx/ ]
+        },
+        src: ['tmp/Array*.png']
+      }
     },
 
     // Unit tests.
