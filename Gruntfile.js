@@ -69,14 +69,14 @@ module.exports = function(grunt) {
         options: {
           alternatesPattern: null
         },
-        src: ['tmp/Array*.png']
+        src: ['tmp/Off*.png']
       },
-      // alt_options_error: {
-      //   options: {
-      //     alternatesPattern: '[@_]\\dx'
-      //   },
-      //   src: ['tmp/89e088f6*.png']
-      // }
+      alt_options_array: {
+        options: {
+          alternatesPattern: [ /-(hover|active)/, /[@_]\dx/ ]
+        },
+        src: ['tmp/Array*.png']
+      }
     },
 
     // Unit tests.

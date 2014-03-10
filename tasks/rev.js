@@ -76,28 +76,36 @@ module.exports = function(grunt) {
       alternatesPatterns = [options.alternatesPattern];
     }
 
-    var i, match, regexp,
+    var i, match, regexp, tempRegexp, tempRegexpFunction, numRegexpGroups,
       regexps = [],
       matchingFiles = {},
       patternsLength = alternatesPatterns.length;
+
+    tempRegexpFunction = function($0, $1) {
+        return $1 ? $0 : '###';
+    };
 
     // Prepare regexps
     for (i = 0; i < patternsLength; i += 1) {
       if (grunt.util.kindOf(alternatesPatterns[i]) !== 'regexp') {
         grunt.fatal('alternates pattern must be a regular expression');
       }
+      tempRegexp = alternatesPatterns[i].source.replace(/(\\)?\(/g, tempRegexpFunction);
+      numRegexpGroups = tempRegexp.split('###').length - 1;
       regexp = new RegExp('^(.*)(' + alternatesPatterns[i].source + ')(\\.(?:jpg|png|gif|webp))$');
       regexps.push(regexp);
-      matchingFiles[alternatesPatterns[i].source] = { regexp: regexp, matching: [] };
+      matchingFiles[alternatesPatterns[i].source] = { regexp: regexp, numRegexpGroups: numRegexpGroups, matching: [] };
     }
 
     // Find matching files
+    var matchData;
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(f) {
         for (i = 0; i < patternsLength; i += 1) {
           match = regexps[i].exec(f);
+          matchData = matchingFiles[alternatesPatterns[i].source];
           if (match !== null) {
-            matchingFiles[alternatesPatterns[i].source].matching.push(match);
+            matchData.matching.push([match[0], match[1], match[2], match[3 + matchData.numRegexpGroups]]);
             // Limitation: a file can only match one pattern
             break;
           }
