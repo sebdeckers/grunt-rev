@@ -38,7 +38,7 @@ exports.rev = {
   custom_options: function(test) {
     test.expect(1);
 
-    var exists = grunt.file.exists('tmp/2fd4.custom.txt');
+    var exists = grunt.file.exists('tmp/2fd4-custom.txt');
     test.ok(exists, '4 character SHA-1 hash prefix');
 
     test.done();
