@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         fsOptions = {encoding: fileEncoding};
 
     grunt.log.verbose.write('Hashing ' + filepath + '...');
-    hash.update(fs.readFileSync(filepath, fsOptions), fileEncoding));
+    hash.update(fs.readFileSync(filepath, fsOptions), fileEncoding);
     return hash.digest(encoding);
   }
 
