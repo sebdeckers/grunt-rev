@@ -15,9 +15,11 @@ var fs = require('fs'),
 module.exports = function(grunt) {
 
   function md5(filepath, algorithm, encoding, fileEncoding) {
-    var hash = crypto.createHash(algorithm);
+    var hash      = crypto.createHash(algorithm),
+        fsOptions = {encoding: fileEncoding};
+
     grunt.log.verbose.write('Hashing ' + filepath + '...');
-    hash.update(fs.readFileSync(filepath, fileEncoding));
+    hash.update(fs.readFileSync(filepath, fsOptions), fileEncoding));
     return hash.digest(encoding);
   }
 
