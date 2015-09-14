@@ -56,7 +56,7 @@ grunt.initConfig({
 Type: `String`
 Default value: `'utf8'`
 
-The encoding of the file contents.
+The encoding of the file contents. Possible values `'utf8'`, `'ascii'` or `'binary'`.
 
 #### options.algorithm
 Type: `String`
