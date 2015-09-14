@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       test: {
         flatten: true,
         expand: true,
-        src: ['test/fixtures/*.txt'],
+        src: ['test/fixtures/*.{txt,bin}'],
         dest: 'tmp/',
       },
     },
@@ -56,6 +56,12 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      binary_options: {
+	options: {
+          encoding: 'binary'
+        },
+        src: ['tmp/binary.bin']
+      }
     },
 
     // Unit tests.
