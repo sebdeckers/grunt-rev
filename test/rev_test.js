@@ -50,5 +50,12 @@ exports.rev = {
     test.ok(exists, '8 character MD5 hash prefix for international content');
 
     test.done();
+  },
+  binary_options: function(test) {
+   test.expect(1);
+   var exists = grunt.file.exists('tmp/2ac69376.binary.bin');
+   test.ok(exists, '8 character MD5 hash prefix for binary content');
+   
+   test.done();
   }
 };

@@ -17,7 +17,8 @@ module.exports = function(grunt) {
   function md5(filepath, algorithm, encoding, fileEncoding) {
     var hash = crypto.createHash(algorithm);
     grunt.log.verbose.write('Hashing ' + filepath + '...');
-    hash.update(grunt.file.read(filepath), fileEncoding);
+    //set encoding to null because in other case grunt.file.read use utf8 by default
+    hash.update(grunt.file.read(filepath, {encoding: null}), fileEncoding);
     return hash.digest(encoding);
   }
 
