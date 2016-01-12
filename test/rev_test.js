@@ -30,24 +30,24 @@ exports.rev = {
   default_options: function(test) {
     test.expect(1);
 
-    var exists = grunt.file.exists('tmp/9e107d9d.default.txt');
-    test.ok(exists, '8 character MD5 hash prefix');
+    var exists = grunt.file.exists('tmp/default.9e107d9d.txt');
+    test.ok(exists, '8 character MD5 hash suffix');
 
     test.done();
   },
   custom_options: function(test) {
     test.expect(1);
 
-    var exists = grunt.file.exists('tmp/2fd4.custom.txt');
-    test.ok(exists, '4 character SHA-1 hash prefix');
+    var exists = grunt.file.exists('tmp/custom.2fd4.txt');
+    test.ok(exists, '4 character SHA-1 hash suffix');
 
     test.done();
   },
   international_options: function(test) {
     test.expect(1);
 
-    var exists = grunt.file.exists('tmp/faa07745.international.txt');
-    test.ok(exists, '8 character MD5 hash prefix for international content');
+    var exists = grunt.file.exists('tmp/international.faa07745.txt');
+    test.ok(exists, '8 character MD5 hash suffix for international content');
 
     test.done();
   }
