@@ -46,7 +46,8 @@ module.exports = function(grunt) {
       custom_options: {
         options: {
           algorithm: 'sha1',
-          length: 4
+          length: 4,
+          separator: '-'
         },
         src: ['tmp/custom.txt']
       },

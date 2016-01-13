@@ -26,7 +26,8 @@ module.exports = function(grunt) {
     var options = this.options({
       encoding: 'utf8',
       algorithm: 'md5',
-      length: 8
+      length: 8,
+      separator: '.'
     });
 
     this.files.forEach(function(filePair) {
@@ -34,7 +35,7 @@ module.exports = function(grunt) {
 
         var hash = md5(f, options.algorithm, 'hex', options.encoding),
           prefix = hash.slice(0, options.length),
-          renamed = [prefix, path.basename(f)].join('.'),
+          renamed = [prefix, path.basename(f)].join(options.separator),
           outPath = path.resolve(path.dirname(f), renamed);
 
         grunt.verbose.ok().ok(hash);
