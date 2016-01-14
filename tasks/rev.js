@@ -38,7 +38,7 @@ module.exports = function(grunt) {
           outPath = path.resolve(path.dirname(f), renamed);
 
         grunt.verbose.ok().ok(hash);
-        fs.renameSync(f, outPath);
+        fs.symlinkSync(path.basename(f), outPath);
         grunt.log.write(f + ' ').ok(renamed);
 
       });
