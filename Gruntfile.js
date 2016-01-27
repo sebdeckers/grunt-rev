@@ -56,6 +56,12 @@ module.exports = function(grunt) {
         },
         src: ['tmp/international.txt']
       },
+      summary_options: {
+        options: {
+          summary: 'tmp/rev_summary.js'
+        },
+        src: ['tmp/revsummary.txt']
+      }
     },
 
     // Unit tests.

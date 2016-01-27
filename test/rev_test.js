@@ -50,5 +50,15 @@ exports.rev = {
     test.ok(exists, '8 character MD5 hash prefix for international content');
 
     test.done();
+  },
+  rev_summary_options: function(test) {
+    test.expect(2);
+
+    var exists = grunt.file.exists('tmp/rev_summary.js');
+    test.ok(exists, 'summary file produced');
+
+    var summary = grunt.file.readJSON('tmp/rev_summary.js');
+    test.equal(summary['tmp/revsummary.txt'], 'tmp/9e107d9d.revsummary.txt');
+    test.done();
   }
 };
